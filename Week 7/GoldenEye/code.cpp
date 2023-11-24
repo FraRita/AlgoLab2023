@@ -143,34 +143,13 @@ void resolve_case(){
   }
   std::cout<<std::endl;
   
-  K::FT all = binary_all(missions,edges,0,edges.size(),n);
-  if(all == -1) std::cout<< std::setprecision(0) << std::fixed << max_n << std::endl;
-  else{
-    create_union_find(edges,max_n,n);
-    bool flag = true;
-    for(int i=0;i<missions.size();i++){
-      if(uf.find_set(std::get<0>(missions[i])) != uf.find_set(std::get<1>(missions[i])) || std::get<2>(missions[i]) > max_n){
-        std::cout << std::setprecision(0) << std::fixed << all << std::endl;
-        flag = false;
-        break;
-      }
-    }
-    if(flag) std::cout<< std::setprecision(0) << std::fixed << max_n << std::endl;
-  }
+  if(max_y != -1) edges.push_back({0,0,max_y});
+  if(max_n != -1) edges.push_back({0,0,max_n});
+  std::sort(edges.begin(),edges.end(),[](Edge &e1,Edge &e2){return (std::get<2>(e1)<std::get<2>(e2));});
   
-  if(max_y == -1){
-    std::cout << 0 << std::endl;
-    return;
-  } 
-  K::FT same = binary_same(missions,doable,edges,0,edges.size(),n);
-  create_union_find(edges,max_y,n);
-  for(int i=0;i<missions.size();i++){
-    if( ( uf.find_set(std::get<0>(missions[i])) == uf.find_set(std::get<1>(missions[i])) && std::get<2>(missions[i]) <= max_y ) != doable[i] ){
-      std::cout << std::setprecision(0) << std::fixed << same << std::endl;
-      return;
-    }
-  }
-  std::cout<< std::setprecision(0) << std::fixed << max_y << std::endl;
+  std::cout << std::setprecision(0) << std::fixed << binary_all(missions,edges,0,edges.size(),n) << std::endl;
+  if(max_y != -1) std::cout<< binary_same(missions,doable,edges,0,edges.size(),n) << std::endl;
+  else std::cout << 0 << std::endl;
 }
 
 int main(){
